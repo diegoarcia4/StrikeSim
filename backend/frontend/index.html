@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StrikeSim.io - Ladder Challenge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial; padding: 20px; background: #111; color: #fff; }
+    h1 { color: #3cf; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+    th { background-color: #222; }
+  </style>
+</head>
+<body>
+  <h1>🧪 StrikeSim Ladder Challenge</h1>
+  <div id="ladder"></div>
+  <h2>📊 Today's Props</h2>
+  <table id="propsTable"></table>
+
+  <script>
+    fetch('/api/ladder')
+      .then(res => res.json())
+      .then(data => {
+        const div = document.getElementById('ladder');
+        div.innerHTML = `<p><strong>Current Step:</strong> ${data.step}<br>
+          <strong>Wager:</strong> $${data.wager}<br>
+          <strong>To Win:</strong> $${data.payout}</p>`;
+      });
+
+    fetch('/api/props')
+      .then(res => res.json())
+      .then(data => {
+        let html = "<tr><th>Player</th><th>Line</th><th>Opponent</th><th>Model %</th></tr>";
+        data.forEach(p => {
+          html += `<tr><td>${p.player}</td><td>${p.line}</td><td>${p.opponent}</td><td>${p.model_pct}%</td></tr>`;
+        });
+        document.getElementById('propsTable').innerHTML = html;
+      });
+  </script>
+</body>
+</html>
